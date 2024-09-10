@@ -1,9 +1,12 @@
 "use client"
+import InputMask from "react-input-mask";
+
 import style from "./promocao.module.scss";
 
 interface DadosSecretariaProps {
   formik: any;
 }
+
 
 const DadosPessoais: React.FC<DadosSecretariaProps> = ({ formik }) => {
 
@@ -64,34 +67,34 @@ const DadosPessoais: React.FC<DadosSecretariaProps> = ({ formik }) => {
       </div>
 
       <div>
-
-        <label htmlFor="contact">Telefone </label>
-        <input
+        <label htmlFor="contato">Telefone</label>
+        <InputMask
+          mask="99999999999"  // Máscara para telefones celulares
           className={style.container__ContainerForm_form_input}
-          id="contact"
-          name="contact"
-          placeholder={formik.values.contact}
+          id="contato"
+          name="contato"
+          placeholder="(00) 00000-0000"
+          value={formik.values.contato}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.contact}
           required
         />
-        {formik.touched.contact && formik.errors.contact ? (
-          <span className={style.form__error}>{formik.errors.contact}</span>
+        {formik.touched.contato && formik.errors.contato ? (
+          <span className={style.form__error}>{formik.errors.contato}</span>
         ) : null}
       </div>
 
       <div>
-
-        <label htmlFor="cpf">CPF </label>
-        <input
+        <label htmlFor="cpf">CPF</label>
+        <InputMask
+          mask="99999999999""  // Máscara para CPF
           className={style.container__ContainerForm_form_input}
           id="cpf"
           name="cpf"
-          placeholder={formik.values.cpf}
+          placeholder="000.000.000-00"
+          value={formik.values.cpf}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.cpf}
           required
         />
         {formik.touched.cpf && formik.errors.cpf ? (

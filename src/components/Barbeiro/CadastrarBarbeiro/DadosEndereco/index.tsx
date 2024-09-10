@@ -1,5 +1,6 @@
 "use client"
 import style from "./endereco.module.scss";
+import InputMask from "react-input-mask";
 
 interface DadosBarbeiroProps {
   formik: any;
@@ -12,16 +13,18 @@ const DadosEndereco: React.FC<DadosBarbeiroProps> = ({ formik}) => {
             <div>
               <label htmlFor="address.cep">CEP</label>
 
-              <input
+              <InputMask
+                mask="99999999"
                 className={style.container__ContainerForm_form_input}
                 id="address.cep"
                 name="address.cep"
-                placeholder={formik.values.address.cep}
+                placeholder="00000000"
+                value={formik.values.address.cep}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.address.cep}
                 required
               />
+
             </div>
             {formik.touched.cep && formik.errors.cep ? (
               <span className={style.form__error}>{formik.errors.cep}</span>

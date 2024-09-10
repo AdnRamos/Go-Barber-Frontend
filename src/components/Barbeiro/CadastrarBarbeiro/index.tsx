@@ -90,7 +90,6 @@ const CadastrarBarbeiro = () => {
     }
   );
   
-
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: (field: string, value: any) => void) => {
     const file = event.currentTarget.files?.[0];
     if (file) {

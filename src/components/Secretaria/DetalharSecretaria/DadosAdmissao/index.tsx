@@ -1,5 +1,8 @@
 "use client";
+import InputMask from "react-input-mask"; // Para aplicar máscaras
+import { NumericFormat } from "react-number-format"; // Para máscara de valores monetários
 import style from "./admissao.module.scss";
+
 interface DadosSecretariaProps {
   formik: any;
   editar: boolean;
@@ -7,26 +10,31 @@ interface DadosSecretariaProps {
 }
 
 const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik, editar  }) => {
-
   return (
     <>
       <div className={style.container__ContainerForm_form_threePartsContainer}>
         <div>
-          <label htmlFor="salary">Salario</label>
-          <input
+          <label htmlFor="salary">Salário</label>
+          <NumericFormat
             id="salary"
             className={style.container__ContainerForm_form_input}
             name="salary"
-            placeholder="Não informado"
-            onBlur={formik.handleBlur}
+            placeholder="R$ 0.000,00"
             value={formik.values.salary}
+            thousandSeparator="."
+            decimalSeparator=","
+            decimalScale={2}
+            fixedDecimalScale={true}
+            prefix="R$ "
             disabled={!editar}
-            onChange={editar ? formik.handleChange : undefined}
+            onValueChange={(values) =>
+              editar && formik.setFieldValue("salary", values.floatValue)
+            }
           />
         </div>
 
         <div>
-          <label htmlFor="admissionDate">Data de Admissão </label>
+          <label htmlFor="admissionDate">Data de Admissão</label>
           <input
             id="admissionDate"
             className={style.container__ContainerForm_form_input}
@@ -42,11 +50,12 @@ const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik, editar  }) => {
 
         <div>
           <label htmlFor="workload">Jornada de Trabalho</label>
-          <input
+          <InputMask
             id="workload"
+            mask="99"
             className={style.container__ContainerForm_form_input}
             name="workload"
-            placeholder="Não informado"
+            placeholder="00h"
             value={formik.values.workload}
             disabled={!editar}
             onChange={editar ? formik.handleChange : undefined}
@@ -54,30 +63,32 @@ const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik, editar  }) => {
         </div>
 
         <div>
-          <label htmlFor="start">Inicio de Expediente </label>
-          <input
+          <label htmlFor="start">Início de Expediente</label>
+          <InputMask
+            mask="99:99"
             id="start"
             className={style.container__ContainerForm_form_input}
             name="start"
-            placeholder="Não informado"
-            onChange={editar ? formik.handleChange : undefined}
-            onBlur={formik.handleBlur}
+            placeholder="00:00"
             value={formik.values.start}
             disabled={!editar}
+            onChange={editar ? formik.handleChange : undefined}
+            onBlur={formik.handleBlur}
           />
         </div>
 
         <div>
-          <label htmlFor="end">Fim de Expediente </label>
-          <input
+          <label htmlFor="end">Fim de Expediente</label>
+          <InputMask
+            mask="99:99"
             id="end"
             className={style.container__ContainerForm_form_input}
             name="end"
-            placeholder="Não informado"
-            onChange={editar ? formik.handleChange : undefined}
-            onBlur={formik.handleBlur}
+            placeholder="00:00"
             value={formik.values.end}
             disabled={!editar}
+            onChange={editar ? formik.handleChange : undefined}
+            onBlur={formik.handleBlur}
           />
         </div>
       </div>

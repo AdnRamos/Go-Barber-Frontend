@@ -1,6 +1,9 @@
 "use client";
+import InputMask from "react-input-mask"; // Para aplicar máscaras
+import { NumericFormat } from "react-number-format"; // Para máscara de valores monetários
 import style from "./admissao.module.scss";
 import { Service } from "@/interfaces/barbeiroInterface";
+
 interface DadosBarbeiroProps {
   formik: any;
   editar: boolean;
@@ -8,52 +11,48 @@ interface DadosBarbeiroProps {
   servicosDisponiveis: Service[];
   hrefAnterior: string;
   setServicosSelecionadosId: any;
-
 }
 
-const DadosAdmissao: React.FC<DadosBarbeiroProps> = ({ formik, editar, servicosSelecionadosId, servicosDisponiveis, setServicosSelecionadosId }) => {
-
-
+const DadosAdmissao: React.FC<DadosBarbeiroProps> = ({
+  formik,
+  editar,
+  servicosSelecionadosId,
+  servicosDisponiveis,
+  setServicosSelecionadosId,
+}) => {
   const handleServiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(event.target.selectedOptions);
     const selectedIds = selectedOptions.map((option) => parseInt(option.value, 10));
 
-    const updatedSelections = [...servicosSelecionadosId];
-
-    selectedIds.forEach((id) => {
-      const index = updatedSelections.indexOf(id);
-      if (index > -1) {
-        // Remove o serviço se já estiver selecionado
-        updatedSelections.splice(index, 1);
-      } else {
-        // Adiciona o serviço se não estiver selecionado
-        updatedSelections.push(id);
-      }
-    });
-
-    setServicosSelecionadosId(updatedSelections);
-
-    formik.setFieldValue("idServices", updatedSelections);
+    setServicosSelecionadosId(selectedIds);
+    formik.setFieldValue("idServices", selectedIds);
   };
+
   return (
     <>
       <div className={style.container__ContainerForm_form_threePartsContainer}>
         <div>
-          <label htmlFor="salary">Salario</label>
-          <input
+          <label htmlFor="salary">Salário</label>
+          <NumericFormat
             id="salary"
             className={style.container__ContainerForm_form_input}
             name="salary"
-            placeholder="Não informado"
-            onBlur={formik.handleBlur}
+            placeholder="R$ 0.000,00"
             value={formik.values.salary}
+            thousandSeparator="."
+            decimalSeparator=","
+            decimalScale={2}
+            fixedDecimalScale={true}
+            prefix="R$ "
             disabled={!editar}
-            onChange={editar ? formik.handleChange : undefined}
+            onValueChange={(values) =>
+              editar && formik.setFieldValue("salary", values.floatValue)
+            }
           />
         </div>
 
         <div>
-          <label htmlFor="admissionDate">Data de Admissão </label>
+          <label htmlFor="admissionDate">Data de Admissão</label>
           <input
             id="admissionDate"
             className={style.container__ContainerForm_form_input}
@@ -69,11 +68,12 @@ const DadosAdmissao: React.FC<DadosBarbeiroProps> = ({ formik, editar, servicosS
 
         <div>
           <label htmlFor="workload">Jornada de Trabalho</label>
-          <input
+          <InputMask
             id="workload"
+            mask="99"
             className={style.container__ContainerForm_form_input}
             name="workload"
-            placeholder="Não informado"
+            placeholder="00h"
             value={formik.values.workload}
             disabled={!editar}
             onChange={editar ? formik.handleChange : undefined}
@@ -81,33 +81,36 @@ const DadosAdmissao: React.FC<DadosBarbeiroProps> = ({ formik, editar, servicosS
         </div>
 
         <div>
-          <label htmlFor="start">Inicio de Expediente </label>
-          <input
+          <label htmlFor="start">Início de Expediente</label>
+          <InputMask
+            mask="99:99"
             id="start"
             className={style.container__ContainerForm_form_input}
             name="start"
-            placeholder="Não informado"
-            onChange={editar ? formik.handleChange : undefined}
-            onBlur={formik.handleBlur}
+            placeholder="00:00"
             value={formik.values.start}
             disabled={!editar}
+            onChange={editar ? formik.handleChange : undefined}
+            onBlur={formik.handleBlur}
           />
         </div>
 
         <div>
-          <label htmlFor="end">Fim de Expediente </label>
-          <input
+          <label htmlFor="end">Fim de Expediente</label>
+          <InputMask
+            mask="99:99"
             id="end"
             className={style.container__ContainerForm_form_input}
             name="end"
-            placeholder="Não informado"
-            onChange={editar ? formik.handleChange : undefined}
-            onBlur={formik.handleBlur}
+            placeholder="00:00"
             value={formik.values.end}
             disabled={!editar}
+            onChange={editar ? formik.handleChange : undefined}
+            onBlur={formik.handleBlur}
           />
         </div>
       </div>
+
       <div>
         {editar ? (
           <div className={style.container__ContainerForm_form_halfContainer}>
@@ -131,14 +134,20 @@ const DadosAdmissao: React.FC<DadosBarbeiroProps> = ({ formik, editar, servicosS
             {servicosSelecionadosId.length > 0 && (
               <div className={style.selectedServices}>
                 <h4>Serviços Selecionados:</h4>
-                <p>{servicosSelecionadosId.map(id => servicosDisponiveis.find(service => service.id === id)?.name).join(", ")}</p>
+                <p>
+                  {servicosSelecionadosId
+                    .map((id) => servicosDisponiveis.find((service) => service.id === id)?.name)
+                    .join(", ")}
+                </p>
               </div>
             )}
             {formik.touched.services && formik.errors.services ? (
               <span className={style.form__error}>{formik.errors.services}</span>
             ) : null}
           </div>
-        ) : ("")}
+        ) : (
+          ""
+        )}
         {formik.touched.services && formik.errors.services ? (
           <span className={style.form__error}>{formik.errors.services}</span>
         ) : null}

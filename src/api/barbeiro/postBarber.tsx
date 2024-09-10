@@ -11,7 +11,7 @@ export async function postBarber(barber: Barbeiro, profilePhoto:File) {
 
   // Converte o objeto `barber` para uma string JSON
   const barberJson = JSON.stringify(barber);
-
+  console.log(barberJson);
   // Adiciona o JSON e a imagem ao FormData
   formData.append("barber", barberJson);
   formData.append("profilePhoto", profilePhoto, profilePhoto.name);

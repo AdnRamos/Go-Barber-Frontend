@@ -1,4 +1,5 @@
-"use client";
+import InputMask from "react-input-mask";
+import { NumericFormat } from "react-number-format"; // Se estiver usando a versão mais recente
 import style from "./admissao.module.scss";
 
 interface DadosSecretariaProps {
@@ -7,20 +8,25 @@ interface DadosSecretariaProps {
 
 const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik }) => {
 
-
   return (
     <>
       <div className={style.container__ContainerForm_form_threePartsContainer}>
         <div>
-          <label htmlFor="salary">Salario</label>
-          <input
+          <label htmlFor="salary">Salário</label>
+          {/* Usando formatação monetária para o campo de salário */}
+          <NumericFormat
+            thousandSeparator="."
+            decimalSeparator=","
+            decimalScale={2}  // Garantimos que haverá duas casas decimais
+            fixedDecimalScale={true}  // Garante que o número de casas decimais será fixo
+            prefix="R$ "
             className={style.container__ContainerForm_form_input}
             id="salary"
             name="salary"
-            placeholder={formik.values.salary}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
             value={formik.values.salary}
+            onValueChange={(values) =>
+              formik.setFieldValue("salary", values.floatValue)
+            }
             required
           />
         </div>
@@ -48,14 +54,15 @@ const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik }) => {
 
         <div>
           <label htmlFor="workload">Jornada de Trabalho</label>
-          <input
+          <InputMask
+            mask="99"
             className={style.container__ContainerForm_form_input}
             id="workload"
             name="workload"
-            placeholder={formik.values.workload}
+            placeholder="00h"
+            value={formik.values.workload}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.workload}
             required
           />
           {formik.touched.workload && formik.errors.workload ? (
@@ -66,15 +73,16 @@ const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik }) => {
       
       <div className={style.container__ContainerForm_form_halfContainer}>
         <div>
-          <label htmlFor="start">Inicio de Expediente</label>
-          <input
+          <label htmlFor="start">Início de Expediente</label>
+          <InputMask
+            mask="99:99"
             className={style.container__ContainerForm_form_input}
             id="start"
             name="start"
-            placeholder={formik.values.start}
+            placeholder="00:00"
+            value={formik.values.start}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.start}
             required
           />
           {formik.touched.start && formik.errors.start ? (
@@ -83,14 +91,15 @@ const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik }) => {
         </div>
         <div>
           <label htmlFor="end">Fim de Expediente</label>
-          <input
+          <InputMask
+            mask="99:99"
             className={style.container__ContainerForm_form_input}
             id="end"
             name="end"
-            placeholder={formik.values.end}
+            placeholder="00:00"
+            value={formik.values.end}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.end}
             required
           />
           {formik.touched.end && formik.errors.end ? (
@@ -98,6 +107,8 @@ const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik }) => {
           ) : null}
         </div>
       </div>
+     
+      
     </>
   );
 };

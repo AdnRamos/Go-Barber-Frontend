@@ -1,5 +1,6 @@
 "use client";
-
+import InputMask from "react-input-mask"; // Para aplicar máscaras
+import { NumericFormat } from "react-number-format"; 
 import style from "./admissao.module.scss";
 
 interface DadosSecretariaProps {
@@ -14,21 +15,27 @@ const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik, editar, }) => {
     <>
       <div className={style.container__ContainerForm_form_threePartsContainer}>
         <div>
-          <label htmlFor="salary">Salario</label>
-          <input
+          <label htmlFor="salary">Salário</label>
+          <NumericFormat
             id="salary"
             className={style.container__ContainerForm_form_input}
             name="salary"
-            placeholder="Não informado"
-            onBlur={formik.handleBlur}
+            placeholder="R$ 0.000,00"
             value={formik.values.salary}
-            disabled
-            onChange={editar ? formik.handleChange : undefined}
+            thousandSeparator="."
+            decimalSeparator=","
+            decimalScale={2}
+            fixedDecimalScale={true}
+            prefix="R$ "
+            disabled={!editar}
+            onValueChange={(values) =>
+              editar && formik.setFieldValue("salary", values.floatValue)
+            }
           />
         </div>
 
         <div>
-          <label htmlFor="admissionDate">Data de Admissão </label>
+          <label htmlFor="admissionDate">Data de Admissão</label>
           <input
             id="admissionDate"
             className={style.container__ContainerForm_form_input}
@@ -37,53 +44,55 @@ const DadosAdmissao: React.FC<DadosSecretariaProps> = ({ formik, editar, }) => {
             placeholder="Não informado"
             onBlur={formik.handleBlur}
             value={formik.values.admissionDate}
-            disabled
+            disabled={!editar}
             onChange={editar ? formik.handleChange : undefined}
           />
         </div>
 
         <div>
           <label htmlFor="workload">Jornada de Trabalho</label>
-          <input
+          <InputMask
             id="workload"
+            mask="99"
             className={style.container__ContainerForm_form_input}
             name="workload"
-            placeholder="Não informado"
+            placeholder="00h"
             value={formik.values.workload}
-            disabled
+            disabled={!editar}
             onChange={editar ? formik.handleChange : undefined}
           />
         </div>
 
         <div>
-          <label htmlFor="start">Inicio de Expediente </label>
-          <input
+          <label htmlFor="start">Início de Expediente</label>
+          <InputMask
+            mask="99:99"
             id="start"
             className={style.container__ContainerForm_form_input}
             name="start"
-            placeholder="Não informado"
+            placeholder="00:00"
+            value={formik.values.start}
+            disabled={!editar}
             onChange={editar ? formik.handleChange : undefined}
             onBlur={formik.handleBlur}
-            value={formik.values.start}
-            disabled
           />
         </div>
 
         <div>
-          <label htmlFor="end">Fim de Expediente </label>
-          <input
+          <label htmlFor="end">Fim de Expediente</label>
+          <InputMask
+            mask="99:99"
             id="end"
             className={style.container__ContainerForm_form_input}
             name="end"
-            placeholder="Não informado"
+            placeholder="00:00"
+            value={formik.values.end}
+            disabled={!editar}
             onChange={editar ? formik.handleChange : undefined}
             onBlur={formik.handleBlur}
-            value={formik.values.end}
-            disabled
           />
         </div>
       </div>
-      
     </>
   );
 };
